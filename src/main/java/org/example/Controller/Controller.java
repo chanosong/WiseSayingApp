@@ -1,6 +1,7 @@
 package org.example.Controller;
 
 import org.example.Container.Container;
+import org.example.Entity.Path;
 import org.example.Entity.Saying;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -8,24 +9,21 @@ import org.json.simple.JSONObject;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Controller {
 
     private List<Saying> sayingList;
     int cnt;
-    String path = "src/main/java/org/example/Storage/data.txt";
-    String jpath = "src/main/java/org/example/Storage/data.json";
     public Controller() {
         sayingList = new LinkedList<>();
         cnt = 0;
     }
 
     public void sync() throws IOException {
-        File file = new File(path);
+        File file = new File(Path.textPath);
 
         if (file.exists()){
-            BufferedReader reader = new BufferedReader(new FileReader(path));
+            BufferedReader reader = new BufferedReader(new FileReader(Path.textPath));
 
             String line;
             while ((line = reader.readLine()) != null) {
@@ -38,8 +36,8 @@ public class Controller {
         }
     }
     public void exit() throws IOException {
-        File jfile = new File(path);
-        JSONArray jarr = new JSONArray();
+        File jfile = new File(Path.textPath);
+        JSONArray jsonArray = new JSONArray();
 
         PrintWriter writer = new PrintWriter(new FileWriter(jfile));
         for (Saying s : sayingList) {
@@ -48,9 +46,9 @@ public class Controller {
             obj.put("content", s.getContent());
             obj.put("author", s.getAuthor());
 
-            jarr.add(obj);
+            jsonArray.add(obj);
         }
-        writer.write(jarr.toJSONString());
+        writer.write(jsonArray.toJSONString());
         writer.close();
     }
     public void enroll() {
@@ -75,7 +73,7 @@ public class Controller {
     }
 
     public void build() throws IOException {
-        File jfile = new File(jpath);
+        File jfile = new File(Path.jsonPath);
         JSONArray jarr = new JSONArray();
 
         PrintWriter writer = new PrintWriter(new FileWriter(jfile));

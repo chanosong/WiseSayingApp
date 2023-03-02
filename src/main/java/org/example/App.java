@@ -2,14 +2,9 @@ package org.example;
 
 import org.example.Container.Container;
 import org.example.Controller.Controller;
-import org.example.Entity.Saying;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import java.io.*;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+
 
 public class App {
 
