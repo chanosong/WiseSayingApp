@@ -1,5 +1,6 @@
 package org.example.Controller;
 
+import org.example.Container.Container;
 import org.example.Entity.Saying;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -11,13 +12,11 @@ import java.util.Scanner;
 
 public class Controller {
 
-    private Scanner sc;
     private List<Saying> sayingList;
     int cnt;
     String path = "src/main/java/org/example/Storage/data.txt";
     String jpath = "src/main/java/org/example/Storage/data.json";
     public Controller() {
-        sc = new Scanner(System.in);
         sayingList = new LinkedList<>();
         cnt = 0;
     }
@@ -52,9 +51,9 @@ public class Controller {
     }
     public void enroll() {
         System.out.print("명언 : ");
-        String content = sc.nextLine();
+        String content = Container.getScanner().nextLine();
         System.out.print("작가 : ");
-        String author = sc.nextLine();
+        String author = Container.getScanner().nextLine();
 
         sayingList.add(new Saying(++cnt, author, content));
         System.out.println(cnt + "번 명언이 등록되었습니다.");
@@ -111,12 +110,12 @@ public class Controller {
         System.out.print("명언(기존) : ");
         System.out.println(sayingList.get(idx - 1).getContent());
         System.out.print("명언 : ");
-        newContent = sc.nextLine();
+        newContent = Container.getScanner().nextLine();
 
         System.out.print("작가(기존) : ");
         System.out.println(sayingList.get(idx - 1).getAuthor());
         System.out.print("작가 : ");
-        newAuthor = sc.nextLine();
+        newAuthor = Container.getScanner().nextLine();
 
         sayingList.get(idx - 1).modify(newAuthor, newContent);
     }
