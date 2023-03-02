@@ -9,8 +9,8 @@ import org.json.simple.parser.JSONParser;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String path = "./data.txt";
-        String jpath = "./data.json";
+        String path = "src/main/java/org/example/Storage/data.txt";
+        String jpath = "src/main/java/org/example/Storage/data.json";
         File file = new File(path);
 
         List<Saying> list = new LinkedList<>();
