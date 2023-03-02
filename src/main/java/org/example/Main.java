@@ -3,13 +3,30 @@ package org.example;
 import com.sun.jdi.IntegerType;
 
 import java.util.*;
-
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        String path = "./data.txt";
+        File file = new File(path);
 
         List<Saying> list = new LinkedList<>();
         int cnt = 0;
+
+        if (file.exists()) {
+            BufferedReader reader = new BufferedReader(new FileReader(path));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+
+                list.add(new Saying(Integer.valueOf(data[0]), data[1], data[2]));
+            }
+
+            reader.close();
+            cnt = list.size();
+        }
+
 
         Scanner sc = new Scanner(System.in);
 
@@ -19,7 +36,16 @@ public class Main {
             System.out.print("명령) ");
             String cmd = sc.nextLine();
 
-            if (cmd.equals("종료")) break;
+            if (cmd.equals("종료")) {
+
+                PrintWriter writer = new PrintWriter(new FileWriter(file));
+                for (Saying s : list) {
+                    writer.println(s.getId() + "," + s.getAuthor() + "," + s.getContent());
+                }
+
+                writer.close();
+                break;
+            }
 
             else if (cmd.equals("등록")) {
                 System.out.print("명언 : ");
@@ -91,6 +117,10 @@ class Saying {
     @Override
     public String toString() {
         return id + " / " + author + " / " + content;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getAuthor() {
