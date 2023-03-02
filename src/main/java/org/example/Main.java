@@ -1,5 +1,7 @@
 package org.example;
 
+import com.sun.jdi.IntegerType;
+
 import java.util.*;
 
 
@@ -40,8 +42,15 @@ public class Main {
 
             else if (cmd.contains("삭제")) {
                 String[] deletion = cmd.split("=");
-                list.get(Integer.valueOf(deletion[1]));
-                System.out.println(deletion[1] + "번 명언이 삭제되었습니다.");
+                int idx = Integer.valueOf(deletion[1]);
+
+                if (list.get(idx).isExist()) {
+                    list.get(idx).delete();
+                    System.out.println(deletion[1] + "번 명언이 삭제되었습니다.");
+                }
+                else {
+                    System.out.println(deletion[1] + "번 명언은 존재하지 않습니다.");
+                }
             }
         }
     }
@@ -66,5 +75,9 @@ class Saying {
     public void delete() {
         author = null;
         content = null;
+    }
+
+    public boolean isExist() {
+        return !(author == null && content == null);
     }
 }
