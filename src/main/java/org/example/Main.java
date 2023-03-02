@@ -38,14 +38,19 @@ public class Main {
                 }
             }
 
+            else if (cmd.contains("삭제")) {
+                String[] deletion = cmd.split("=");
+                list.get(Integer.valueOf(deletion[1]));
+                System.out.println(deletion[1] + "번 명언이 삭제되었습니다.");
+            }
         }
     }
 }
 
 class Saying {
-    int id;
-    String author;
-    String content;
+    private int id;
+    private String author;
+    private String content;
 
     Saying(int id, String author, String content) {
         this.id = id;
@@ -56,5 +61,10 @@ class Saying {
     @Override
     public String toString() {
         return id + " / " + author + " / " + content;
+    }
+
+    public void delete() {
+        author = null;
+        content = null;
     }
 }
