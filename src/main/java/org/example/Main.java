@@ -4,16 +4,20 @@ import com.sun.jdi.IntegerType;
 
 import java.util.*;
 import java.io.*;
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         String path = "./data.txt";
+        String jpath = "./data.json";
         File file = new File(path);
 
         List<Saying> list = new LinkedList<>();
         int cnt = 0;
 
         if (file.exists()) {
+
             BufferedReader reader = new BufferedReader(new FileReader(path));
 
             String line;
@@ -37,12 +41,19 @@ public class Main {
             String cmd = sc.nextLine();
 
             if (cmd.equals("종료")) {
+                File jfile = new File(jpath);
+                JSONArray jarr = new JSONArray();
 
-                PrintWriter writer = new PrintWriter(new FileWriter(file));
+                PrintWriter writer = new PrintWriter(new FileWriter(jfile));
                 for (Saying s : list) {
-                    writer.println(s.getId() + "," + s.getAuthor() + "," + s.getContent());
-                }
+                    JSONObject obj = new JSONObject();
+                    obj.put("id", s.getId());
+                    obj.put("content", s.getContent());
+                    obj.put("author", s.getAuthor());
 
+                    jarr.add(obj);
+                }
+                writer.write(jarr.toJSONString());
                 writer.close();
                 break;
             }
@@ -66,6 +77,24 @@ public class Main {
                         System.out.println(list.get(i).toString());
                     }
                 }
+            }
+            else if (cmd.equals("빌드")) {
+                File jfile = new File(jpath);
+                JSONArray jarr = new JSONArray();
+
+                PrintWriter writer = new PrintWriter(new FileWriter(jfile));
+                for (Saying s : list) {
+                    JSONObject obj = new JSONObject();
+                    obj.put("id", s.getId());
+                    obj.put("content", s.getContent());
+                    obj.put("author", s.getAuthor());
+
+                    jarr.add(obj);
+                }
+                writer.write(jarr.toJSONString());
+                writer.close();
+
+                System.out.println("data.json 파일의 내용이 갱신되었습니다.");
             }
 
             else if (cmd.contains("삭제")) {
