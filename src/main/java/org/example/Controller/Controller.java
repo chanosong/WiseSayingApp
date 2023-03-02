@@ -22,16 +22,20 @@ public class Controller {
     }
 
     public void sync() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(path));
+        File file = new File(path);
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] data = line.split(",");
+        if (file.exists()){
+            BufferedReader reader = new BufferedReader(new FileReader(path));
 
-            sayingList.add(new Saying(Integer.valueOf(data[0]), data[1], data[2]));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+
+                sayingList.add(new Saying(Integer.valueOf(data[0]), data[1], data[2]));
+            }
+            cnt = sayingList.size();
+            reader.close();
         }
-        cnt = sayingList.size();
-        reader.close();
     }
     public void exit() throws IOException {
         File jfile = new File(path);

@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.Container.Container;
 import org.example.Controller.Controller;
 import org.example.Entity.Saying;
 import org.json.simple.JSONArray;
@@ -13,22 +14,16 @@ import java.util.Scanner;
 public class App {
 
     void run() throws IOException {
-        String path = "src/main/java/org/example/Storage/data.txt";
-        File file = new File(path);
 
         Controller controller = new Controller();
 
-        if (file.exists()) {
-            controller.sync();
-        }
-
-        Scanner sc = new Scanner(System.in);
+        controller.sync();
 
         System.out.println("== 명언 앱 ==");
 
         while (true) {
             System.out.print("명령) ");
-            String cmd = sc.nextLine();
+            String cmd = Container.getScanner().nextLine();
 
             if (cmd.equals("종료")) {
                 controller.exit();
