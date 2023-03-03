@@ -1,124 +1,100 @@
 package org.example.Controller;
 
 import org.example.Container.Container;
-import org.example.Entity.Path;
 import org.example.Entity.Saying;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.example.Service.Service;
+import org.json.simple.parser.ParseException;
+
 
 import java.io.*;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Controller {
 
-    private List<Saying> sayingList;
-    int cnt;
+    Service service;
+
+    // Controller 생성자
     public Controller() {
-        sayingList = new LinkedList<>();
-        cnt = 0;
+        service = new Service();
     }
 
-    public void sync() throws IOException {
-        File file = new File(Path.textPath);
-
-        if (file.exists()){
-            BufferedReader reader = new BufferedReader(new FileReader(Path.textPath));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-
-                sayingList.add(new Saying(Integer.valueOf(data[0]), data[1], data[2]));
-            }
-            cnt = sayingList.size();
-            reader.close();
-        }
+    // txt 파일 기반 데이터 로드
+    public void sync() throws IOException, ParseException {
+        service.load();
     }
+
+    // txt 파일 저장 후 종료
     public void exit() throws IOException {
-        File jfile = new File(Path.textPath);
-        JSONArray jsonArray = new JSONArray();
-
-        PrintWriter writer = new PrintWriter(new FileWriter(jfile));
-        for (Saying s : sayingList) {
-            JSONObject obj = new JSONObject();
-            obj.put("id", s.getId());
-            obj.put("content", s.getContent());
-            obj.put("author", s.getAuthor());
-
-            jsonArray.add(obj);
-        }
-        writer.write(jsonArray.toJSONString());
-        writer.close();
+        service.save();
     }
+
+    // 새로운 Saying 등록
     public void enroll() {
         System.out.print("명언 : ");
         String content = Container.getScanner().nextLine();
         System.out.print("작가 : ");
         String author = Container.getScanner().nextLine();
 
-        sayingList.add(new Saying(++cnt, author, content));
-        System.out.println(cnt + "번 명언이 등록되었습니다.");
+        int idx = service.enroll(author, content);
+        System.out.println(idx + "번 명언이 등록되었습니다.");
     }
 
+    // 전체 sayingList 출력
     public void show() {
         System.out.println("번호 / 작가 / 명언 ");
         System.out.println("----------------");
 
-        for (int i = cnt-1; i >=0; i-- ) {
+        List<Saying> sayingList = service.listUp();
+
+        for (int i = sayingList.size() - 1; i >=0; i-- ) {
             if (sayingList.get(i).isExist()) {
                 System.out.println(sayingList.get(i).toString());
             }
         }
     }
 
+    // 현재 sayingList를 json으로 저장
     public void build() throws IOException {
-        File jfile = new File(Path.jsonPath);
-        JSONArray jarr = new JSONArray();
-
-        PrintWriter writer = new PrintWriter(new FileWriter(jfile));
-        for (Saying s : sayingList) {
-            JSONObject obj = new JSONObject();
-            obj.put("id", s.getId());
-            obj.put("content", s.getContent());
-            obj.put("author", s.getAuthor());
-
-            jarr.add(obj);
-        }
-        writer.write(jarr.toJSONString());
-        writer.close();
-
-        System.out.println("data.json 파일의 내용이 갱신되었습니다.");
-    }
-    public void drop(String cmd) {
-        String[] deletion = cmd.split("=");
-        int idx = Integer.valueOf(deletion[1]);
-
-        if (sayingList.get(idx - 1).isExist()) {
-            sayingList.get(idx - 1).delete();
-            System.out.println(deletion[1] + "번 명언이 삭제되었습니다.");
+        if (service.saveJson()) {
+            System.out.println("data.json 파일의 내용이 갱신되었습니다.");
         }
         else {
-            System.out.println(deletion[1] + "번 명언은 존재하지 않습니다.");
+            System.out.println("data.json 갱신에 실패하였습니다.");
         }
     }
 
+    // id 기반 saying 삭제
+    public void drop(String cmd) {
+        String[] deletion = cmd.split("=");
+        long idx = Long.valueOf(deletion[1]);
+
+        if (service.dropById(idx)) {
+            System.out.println(idx + "번 명언이 삭제되었습니다.");
+        }
+        else {
+            System.out.println(idx + "번 명언은 존재하지 않습니다.");
+        }
+    }
+
+    // id 기반 saying 수정
     public void modify(String cmd) {
         String[] modi = cmd.split("=");
-        int idx = Integer.valueOf(modi[1]);
+        long idx = Long.valueOf(modi[1]);
         String newContent;
         String newAuthor;
 
+        Saying saying = service.findById(idx);
+
         System.out.print("명언(기존) : ");
-        System.out.println(sayingList.get(idx - 1).getContent());
+        System.out.println(saying.getContent());
         System.out.print("명언 : ");
         newContent = Container.getScanner().nextLine();
 
         System.out.print("작가(기존) : ");
-        System.out.println(sayingList.get(idx - 1).getAuthor());
+        System.out.println(saying.getAuthor());
         System.out.print("작가 : ");
         newAuthor = Container.getScanner().nextLine();
 
-        sayingList.get(idx - 1).modify(newAuthor, newContent);
+        service.updateSaying(idx, newAuthor, newContent);
     }
 }

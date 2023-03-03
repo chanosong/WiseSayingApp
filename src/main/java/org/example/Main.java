@@ -1,16 +1,12 @@
 package org.example;
 
-import com.sun.jdi.IntegerType;
-
-import java.util.*;
 import java.io.*;
 
 import org.example.Container.Container;
-import org.json.simple.*;
-import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParseException {
 
         Container.init();
         new App().run();

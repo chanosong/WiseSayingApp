@@ -1,11 +1,11 @@
 package org.example.Entity;
 
 public class Saying {
-    private int id;
+    private long id;
     private String author;
     private String content;
 
-    public Saying(int id, String author, String content) {
+    public Saying(long id, String author, String content) {
         this.id = id;
         this.author = author;
         this.content = content;
@@ -16,7 +16,7 @@ public class Saying {
         return id + " / " + author + " / " + content;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

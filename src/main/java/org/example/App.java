@@ -2,13 +2,14 @@ package org.example;
 
 import org.example.Container.Container;
 import org.example.Controller.Controller;
+import org.json.simple.parser.ParseException;
 
 import java.io.*;
 
 
 public class App {
 
-    void run() throws IOException {
+    void run() throws IOException, ParseException {
 
         Controller controller = new Controller();
 
